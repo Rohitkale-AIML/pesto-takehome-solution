@@ -149,6 +149,101 @@ To address the data engineering requirements for AdvertiseX, we can design a sca
 	- *Clicks and Conversions Producer (CSV):* Develop a Kafka producer that reads click and conversion data in CSV format from the AdvertiseX user interaction tracking system and publishes it to the clicks-conversions topic.
 	- *Bid Requests Producer (Avro):* Develop a Kafka producer that reads bid request data in Avro format from the AdvertiseX real-time bidding platform and publishes it to the bid-requests topic.
 - **Develop Apache Spark Structured Streaming Pipeline:** Implement the Apache Spark Structured Streaming pipeline to consume data from Kafka topics, perform data transformations, enrichment, and write processed data to Apache Hive.
+  - Set up an Apache Spark cluster and create a Spark Structured Streaming application to consume data from the Kafka topics, perform data transformations, enrichment, and write processed data to Apache Hive.
+  ```scala
+    import org.apache.spark.sql.functions._
+    import org.apache.spark.sql.types._
+    import org.apache.spark.sql.streaming.Trigger
+    import org.apache.avro.Schema
+
+    // Define schemas for JSON, CSV, and Avro data
+    val impressionSchema = StructType(
+      StructField("ad_creative_id", StringType, nullable = false) ::
+      StructField("user_id", StringType, nullable = false) ::
+      StructField("timestamp", TimestampType, nullable = false) ::
+      StructField("website", StringType, nullable = false) :: Nil
+    )
+    
+    val clicksConversionsSchema = StructType(
+      StructField("event_timestamp", TimestampType, nullable = false) ::
+      StructField("user_id", StringType, nullable = false) ::
+      StructField("campaign_id", StringType, nullable = false) ::
+      StructField("conversion_type", StringType, nullable = true) :: Nil
+    )
+    
+    val bidRequestSchema = new Schema.Parser().parse(
+      """
+        {
+          "namespace": "com.advertisex.bidrequest",
+          "type": "record",
+          "name": "BidRequest",
+          "fields": [
+            {"name": "user_id", "type": "string"},
+            {"name": "auction_id", "type": "string"},
+            {"name": "timestamp", "type": "long"},
+            {"name": "user_data", "type": {
+              "type": "record",
+              "name": "UserData",
+              "fields": [
+                {"name": "age", "type": "int"},
+                {"name": "gender", "type": "string"},
+                {"name": "location", "type": "string"}
+              ]
+            }},
+            {"name": "targeting_criteria", "type": {
+              "type": "map",
+              "values": "string"
+            }}
+          ]
+        }
+      """
+    )
+    
+    // Read data from Kafka topics
+    val impressionsDF = spark.readStream
+      .format("kafka")
+      .option("kafka.bootstrap.servers", "<kafka-broker-host>:<port>")
+      .option("subscribe", "ad-impressions")
+      .option("startingOffsets", "earliest")
+      .load()
+      .select(from_json(col("value").cast("string"), impressionSchema).alias("impression"))
+      .select("impression.*")
+    
+    val clicksConversionsDF = spark.readStream
+      .format("kafka")
+      .option("kafka.bootstrap.servers", "<kafka-broker-host>:<port>")
+      .option("subscribe", "clicks-conversions")
+      .option("startingOffsets", "earliest")
+      .load()
+      .select(from_csv(col("value").cast("string"), clicksConversionsSchema).alias("click_conversion"))
+      .select("click_conversion.*")
+    
+    val bidRequestsDF = spark.readStream
+      .format("kafka")
+      .option("kafka.bootstrap.servers", "<kafka-broker-host>:<port>")
+      .option("subscribe", "bid-requests")
+      .option("startingOffsets", "earliest")
+      .load()
+      .select(from_avro(col("value"), avroSchema).alias("bid_request"))
+      .select("bid_request.*")
+    
+    // Perform data transformations and enrichment
+    val enrichedData = impressionsDF.join(clicksConversionsDF, Seq("user_id", "campaign_id"), "left_outer")
+      .join(bidRequestsDF, Seq("user_id"), "left_outer")
+      .withColumn("event_date", to_date(col("event_timestamp")))
+      .withColumn("hour", hour(col("event_timestamp")))
+      // Additional transformations and enrichment
+    
+    // Write processed data to Apache Hive
+    enrichedData.writeStream
+      .format("hive")
+      .option("path", "path/to/hive/table")
+      .option("partitionBy", "event_date,hour")
+      .option("checkpointLocation", "path/to/checkpoint/dir")
+      .trigger(Trigger.ProcessingTime("1 minute"))
+      .start()
+      .awaitTermination()
+ ```
 - **Configure Apache Hive:** Set up Apache Hive as the data warehouse, create tables with appropriate partitioning and bucketing strategies, and define views and materialized views for common analytical queries.
 - **Implement Error Handling and Monitoring:** Develop error handling mechanisms, data quality checks, and monitoring capabilities within the Apache Spark Structured Streaming pipeline and integrate with an alerting system.
 - **Write Documentation:** Thoroughly document the entire solution, including the architecture, data flow, dependencies, configurations, and operational procedures.
