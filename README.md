@@ -27,3 +27,20 @@ Imagine you are a data engineer working for AdvertiseX, a digital advertising te
 - **Data Processing:** Develop data transformation processes to standardize and enrich the data. Handle data validation, filtering, and deduplication. Implement logic to correlate ad impressions with clicks and conversions to provide meaningful insights.
 - **Data Storage and Query Performance:** Select an appropriate data storage solution for storing processed data efficiently, enabling fast querying for campaign performance analysis. Optimize the storage system for analytical queries and aggregations of ad campaign data.
 - **Error Handling and Monitoring:** Create an error handling and monitoring system to detect data anomalies, discrepancies, or delays. Implement alerting mechanisms to address data quality issues in real-time, ensuring that discrepancies are resolved promptly to maintain ad campaign effectiveness.
+
+## Solution:
+
+To address the data engineering requirements for AdvertiseX, we can design a scalable and efficient data processing pipeline using Apache Spark, Apache Kafka, and Apache Hive. Here's a comprehensive approach to the solution:
+
+### Data Ingestion:
+
+1. **Apache Kafka:** We'll use Apache Kafka as a distributed streaming platform to ingest real-time data from various sources (ad impressions, clicks/conversions, and bid requests).
+2. **Kafka Topics:** Create separate Kafka topics for each data source
+   - ```ad-impressions``` (for JSON ad impression data)
+   - ```clicks-conversions``` (for CSV click and conversion data)
+   - ```bid-requests``` (for Avro bid request data)
+3. **Kafka Producers:** Develop Kafka producers to publish data to the respective topics. These producers can be integrated with the AdvertiseX ad serving systems, user interaction tracking systems, and real-time bidding platforms.
+4. **Batch Data Ingestion:** For batch data ingestion (e.g., historical data), we can use Apache Spark to read the data from the respective sources and write it directly to the corresponding Kafka topics.
+
+
+
