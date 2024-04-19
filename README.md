@@ -144,6 +144,10 @@ To address the data engineering requirements for AdvertiseX, we can design a sca
     # Bid Requests Topic
     bin/kafka-topics.sh --create --topic bid-requests --bootstrap-server <kafka-broker-host>:<port> --partitions 8 --replication-factor 3
     ```
+  - Develop Kafka producers for each data source:
+	- *Ad Impressions Producer (JSON):* Develop a Kafka producer that reads ad impression data in JSON format from the AdvertiseX ad serving system and publishes it to the ad-impressions topic.
+	- *Clicks and Conversions Producer (CSV):* Develop a Kafka producer that reads click and conversion data in CSV format from the AdvertiseX user interaction tracking system and publishes it to the clicks-conversions topic.
+	- *Bid Requests Producer (Avro):* Develop a Kafka producer that reads bid request data in Avro format from the AdvertiseX real-time bidding platform and publishes it to the bid-requests topic.
 - **Develop Apache Spark Structured Streaming Pipeline:** Implement the Apache Spark Structured Streaming pipeline to consume data from Kafka topics, perform data transformations, enrichment, and write processed data to Apache Hive.
 - **Configure Apache Hive:** Set up Apache Hive as the data warehouse, create tables with appropriate partitioning and bucketing strategies, and define views and materialized views for common analytical queries.
 - **Implement Error Handling and Monitoring:** Develop error handling mechanisms, data quality checks, and monitoring capabilities within the Apache Spark Structured Streaming pipeline and integrate with an alerting system.
