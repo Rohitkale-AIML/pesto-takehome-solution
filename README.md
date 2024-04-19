@@ -21,7 +21,7 @@ Imagine you are a data engineer working for AdvertiseX, a digital advertising te
 	- Data Source: AdvertiseX participates in real-time bidding (RTB) auctions to serve ads to users.
 	- Data Format: Bid request data is received in a semi-structured format, mostly in Avro, and includes user information, auction details, and ad targeting criteria.
 
-## Problem Statement: 
+## Case Study Requirements: 
 
 - **Data Ingestion:** Implement a scalable data ingestion system capable of collecting and processing ad impressions (JSON), clicks/conversions (CSV), and bid requests (Avro) data. Ensure that the ingestion system can handle high data volumes generated in real-time and batch modes.
 - **Data Processing:** Develop data transformation processes to standardize and enrich the data. Handle data validation, filtering, and deduplication. Implement logic to correlate ad impressions with clicks and conversions to provide meaningful insights.
