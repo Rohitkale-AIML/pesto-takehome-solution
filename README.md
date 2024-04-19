@@ -54,3 +54,10 @@ To address the data engineering requirements for AdvertiseX, we can design a sca
 4. **Apache Hive:** Use Apache Hive as a data warehouse to store the processed and enriched data in an optimized columnar format (e.g., Apache Parquet or Apache ORC).
 5. **Hive Partitioning:** Partition the Hive tables based on relevant columns (e.g., date, campaign ID) to improve query performance and optimize for common analytical queries.
 
+### Data Storage and Query Performance:
+
+1. **Apache Hive:** Leverage Apache Hive as the data warehouse solution for storing processed data in an optimized columnar format.
+2. **Hive Partitioning and Bucketing:** Partition and bucket the Hive tables based on commonly used columns (e.g., date, campaign ID) to improve query performance and enable pruning of unnecessary data during queries.
+3. **Hive Indexing:** Create Hive indexes on relevant columns to further enhance query performance for specific types of queries.
+4. **Hive Views and Materialized Views:** Create Hive views and materialized views to simplify complex analytical queries and improve query response times.
+
