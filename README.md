@@ -70,7 +70,7 @@ To address the data engineering requirements for AdvertiseX, we can design a sca
 5. **Apache Kafka Monitoring:** Monitor Kafka topics for potential issues, such as lagging consumers, topic underreplicated partitions, or broker failures.
 
 ### Visual Representation:
-
+```plaintext
 +---------------+      +------------+              +--------------+        +------------+
 | Ad Impression |      | Clicks/    |              | Bid Requests |        | Batch Data |
 |     (JSON)    |      | Conversions|              |    (Avro)    |        |  Sources   |
@@ -125,6 +125,7 @@ To address the data engineering requirements for AdvertiseX, we can design a sca
             |    Error Handling     |
             |    and Monitoring     |
             +-----------------------+
+```
 
 ## Implementation and Documentation:
 
