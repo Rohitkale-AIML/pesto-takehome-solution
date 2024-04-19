@@ -132,6 +132,18 @@ To address the data engineering requirements for AdvertiseX, we can design a sca
 **For the implementation of this solution, we will need to:**
 
 - **Set up Apache Kafka:** Install and configure Apache Kafka clusters, create topics, and develop Kafka producers for each data source.
+  - Install and configure Apache Kafka clusters following the official documentation: https://kafka.apache.org/documentation/
+  - Create the following Kafka topics:
+    ```bash
+    # Ad Impressions Topic
+    bin/kafka-topics.sh --create --topic ad-impressions --bootstrap-server <kafka-broker-host>:<port> --partitions 8 --replication-factor 3
+
+    # Clicks and Conversions Topic
+    bin/kafka-topics.sh --create --topic clicks-conversions --bootstrap-server <kafka-broker-host>:<port> --partitions 8 --replication-factor 3
+
+    # Bid Requests Topic
+    bin/kafka-topics.sh --create --topic bid-requests --bootstrap-server <kafka-broker-host>:<port> --partitions 8 --replication-factor 3
+    ```
 - **Develop Apache Spark Structured Streaming Pipeline:** Implement the Apache Spark Structured Streaming pipeline to consume data from Kafka topics, perform data transformations, enrichment, and write processed data to Apache Hive.
 - **Configure Apache Hive:** Set up Apache Hive as the data warehouse, create tables with appropriate partitioning and bucketing strategies, and define views and materialized views for common analytical queries.
 - **Implement Error Handling and Monitoring:** Develop error handling mechanisms, data quality checks, and monitoring capabilities within the Apache Spark Structured Streaming pipeline and integrate with an alerting system.
