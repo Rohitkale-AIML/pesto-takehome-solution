@@ -42,5 +42,15 @@ To address the data engineering requirements for AdvertiseX, we can design a sca
 3. **Kafka Producers:** Develop Kafka producers to publish data to the respective topics. These producers can be integrated with the AdvertiseX ad serving systems, user interaction tracking systems, and real-time bidding platforms.
 4. **Batch Data Ingestion:** For batch data ingestion (e.g., historical data), we can use Apache Spark to read the data from the respective sources and write it directly to the corresponding Kafka topics.
 
+### Data Processing:
 
+1. **Apache Spark Structured Streaming:** Use Apache Spark Structured Streaming to consume data from Kafka topics and perform data transformations and enrichment.
+2. **Data Parsing and Validation:** Parse the incoming data based on the format (JSON, CSV, Avro) and apply data validation rules to ensure data quality.
+3. **Data Transformation and Enrichment:** Perform necessary data transformations and enrichment, such as:
+   - Standardize data formats
+   - Handle deduplication
+   - Correlate ad impressions with clicks and conversions
+   - Enrich data with additional metadata (e.g., campaign details, user information)
+4. **Apache Hive:** Use Apache Hive as a data warehouse to store the processed and enriched data in an optimized columnar format (e.g., Apache Parquet or Apache ORC).
+5. **Hive Partitioning:** Partition the Hive tables based on relevant columns (e.g., date, campaign ID) to improve query performance and optimize for common analytical queries.
 
